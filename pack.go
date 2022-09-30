@@ -2,7 +2,6 @@ package unibase2n
 
 import (
 	"encoding/binary"
-	"math/bits"
 	"unsafe"
 )
 
@@ -49,9 +48,7 @@ func New(pack Pack) *Base {
 		*(*Pack)(unsafe.Pointer(b)) = pack
 		return b
 	}
-	// change to native endian
-	n := bits.Reverse64(uint64(pack))
-	field := (*[8]byte)(unsafe.Pointer(&n))
+	field := (*[8]byte)(unsafe.Pointer(&pack))
 	if isitle { // packed in little endian but I am big
 		b.off = binary.BigEndian.Uint16(field[6:8])
 		b.til = binary.BigEndian.Uint16(field[4:6])

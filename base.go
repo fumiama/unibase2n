@@ -42,7 +42,7 @@ func NewBase(off, til uint16, bit uint8) (*Base, error) {
 	if tile > 0x10000 {
 		return nil, ErrTailOverflow
 	}
-	if tile > uint32(off) || uint32(til) < offe {
+	if tile > uint32(off) && tile <= offe {
 		return nil, ErrTailInCodingArea
 	}
 	return &Base{
