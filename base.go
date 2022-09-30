@@ -22,16 +22,29 @@ var (
 )
 
 // NewBase generates a new base2n config
-func NewBase(off, til uint16, bit uint8) (*Base, error) {
+func NewBase(off, til uint16, bit uint8) (bs Base, err error) {
+	bs = Base{
+		off: off,
+		til: til,
+		bit: bit,
+	}
+	err = bs.check()
+	return
+}
+
+func (bs Base) check() error {
+	off := bs.off
+	til := bs.til
+	bit := bs.bit
 	if off == 0 {
-		return nil, ErrZeroOffsetStart
+		return ErrZeroOffsetStart
 	}
 	if bit >= 16 || bit == 0 {
-		return nil, ErrInvalidBitSize
+		return ErrInvalidBitSize
 	}
 	offe := uint32(off) + 1<<bit // [off, offe)
 	if offe > 0x10000 {
-		return nil, ErrOffsetOverflow
+		return ErrOffsetOverflow
 	}
 	tile := uint32(til) // [til, tile)
 	if bit > 8 && bit%2 == 0 {
@@ -40,14 +53,10 @@ func NewBase(off, til uint16, bit uint8) (*Base, error) {
 		tile += uint32(bit)
 	}
 	if tile > 0x10000 {
-		return nil, ErrTailOverflow
+		return ErrTailOverflow
 	}
 	if tile > uint32(off) && tile <= offe {
-		return nil, ErrTailInCodingArea
+		return ErrTailInCodingArea
 	}
-	return &Base{
-		off: off,
-		til: til,
-		bit: bit,
-	}, nil
+	return nil
 }

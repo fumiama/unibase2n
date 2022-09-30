@@ -12,15 +12,24 @@ func TestPackUnpack(t *testing.T) {
 		t.Fatal(err)
 	}
 	p := bs.Pack()
-	bs1 := New(p)
+	bs1, err := New(p)
+	if err != nil {
+		t.Fatal(err)
+	}
 	assert.Equal(t, bs, bs1)
 	ismele := isLittleEndian()
 	if ismele {
 		// simulate be pack -> le unpack
-		bs2 := New(0x1234567808000000)
+		bs2, err := New(0x1234567808000000)
+		if err != nil {
+			t.Fatal(err)
+		}
 		assert.Equal(t, bs, bs2)
 	} else { // simulate le pack -> be unpack
-		bs2 := New(0x0000000878563412)
+		bs2, err := New(0x0000000878563412)
+		if err != nil {
+			t.Fatal(err)
+		}
 		assert.Equal(t, bs, bs2)
 	}
 }
