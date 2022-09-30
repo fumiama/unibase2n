@@ -7,15 +7,15 @@ import (
 // Base has an encoding buffer thus should not be copied.
 //    total size: 8 bytes
 type Base struct {
-	off uint16  // starting offset
+	off uint16  // starting offset (0 is not permitted)
 	til uint16  // remianing indicator starting offset
 	bit uint8   // 2^bit, max is 15 (32768)
-	pos uint8   // bitwise buffer position
-	buf [2]byte // en/decoding buffer
+	_   [3]byte // always 0, indicates the byte order
 }
 
 var (
 	ErrInvalidBitSize   = errors.New("bit size >= 16 or == 0")
+	ErrZeroOffsetStart  = errors.New("zero offset start")
 	ErrOffsetOverflow   = errors.New("offset overflow")
 	ErrTailOverflow     = errors.New("tail overflow")
 	ErrTailInCodingArea = errors.New("tail in coding area")
@@ -23,6 +23,9 @@ var (
 
 // NewBase generates a new base2n config
 func NewBase(off, til uint16, bit uint8) (*Base, error) {
+	if off == 0 {
+		return nil, ErrZeroOffsetStart
+	}
 	if bit >= 16 || bit == 0 {
 		return nil, ErrInvalidBitSize
 	}
@@ -31,7 +34,7 @@ func NewBase(off, til uint16, bit uint8) (*Base, error) {
 		return nil, ErrOffsetOverflow
 	}
 	tile := uint32(til) // [til, tile)
-	if bit%2 == 0 {
+	if bit > 8 && bit%2 == 0 {
 		tile += uint32(bit / 2)
 	} else {
 		tile += uint32(bit)
