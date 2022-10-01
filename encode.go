@@ -38,6 +38,7 @@ func (bs Base) Encode(data []byte) (out []byte) {
 
 // enc16blk1 for bit 1 (actual enc128blk1)
 //    len(in)!=0, len(out)==len(in)*16
+//go:nosplit
 func enc16blk1(mask uint16, in, out []byte) {
 	for i, n := range in {
 		c := i * 16
@@ -54,6 +55,7 @@ func enc16blk1(mask uint16, in, out []byte) {
 
 // enc64blk2 for bit 2
 //    len(in)!=0, len(out)==len(in)*8
+//go:nosplit
 func enc64blk2(mask uint64, in, out []byte) {
 	for i, n := range in {
 		c := i * 8
@@ -64,6 +66,7 @@ func enc64blk2(mask uint64, in, out []byte) {
 
 // enc32blk4 for bit 4
 //    len(in)!=0, len(out)==len(in)*4
+//go:nosplit
 func enc32blk4(mask uint32, in, out []byte) {
 	for i, n := range in {
 		c := i * 4
@@ -74,6 +77,7 @@ func enc32blk4(mask uint32, in, out []byte) {
 
 // enc16blk8 for bit 8
 //    len(in)!=0, len(out)==len(in)*2
+//go:nosplit
 func enc16blk8(mask uint16, in, out []byte) {
 	for i, n := range in {
 		c := i * 2
@@ -83,6 +87,7 @@ func enc16blk8(mask uint16, in, out []byte) {
 
 // enc128blk for bit 3 5 6 7 9 11 13 15
 //    len(in)>0, len(out)==len(in)/bit*16
+//go:nosplit
 func enc128blk(mask uint128be, bit uint8, in, out []byte) {
 	// 由于最后一次处理有读取越界, 因此作扩展
 	var buf [16]byte
@@ -158,6 +163,7 @@ func enc128blk(mask uint128be, bit uint8, in, out []byte) {
 
 // enc64blk for bit 6 10 12 14
 //    len(in)>0, len(out)==len(in)/bit*16
+//go:nosplit
 func enc64blk(mask uint64, bit uint8, in, out []byte) {
 	// 由于最后一次处理有读取越界, 因此作扩展
 	var buf [8]byte

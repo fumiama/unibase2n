@@ -2,6 +2,7 @@ package unibase2n
 
 import (
 	"errors"
+	"math/bits"
 )
 
 // Base has an encoding buffer thus should not be copied.
@@ -46,11 +47,14 @@ func (bs Base) check() error {
 	if offe > 0x10000 {
 		return ErrOffsetOverflow
 	}
+	if bits.OnesCount8(bit) == 1 { // 2的幂永无offset, 无需管til (1/2/4/8)
+		return nil
+	}
 	tile := uint32(til) // [til, tile)
-	if bit > 8 && bit%2 == 0 {
-		tile += uint32(bit / 2)
+	if bit > 4 && bit%2 == 0 {
+		tile += uint32(bit / 2) // 6 10 12 14
 	} else {
-		tile += uint32(bit)
+		tile += uint32(bit) // 3 5 7 9 11 13 15
 	}
 	if tile > 0x10000 {
 		return ErrTailOverflow
