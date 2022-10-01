@@ -57,7 +57,7 @@ func enc16blk1(mask uint16, in, out []byte) {
 func enc64blk2(mask uint64, in, out []byte) {
 	for i, n := range in {
 		c := i * 8
-		x := (uint64(n)<<42 | uint64(n)<<28 | uint64(n)<<14 | uint64(n)) & 0x30003_00030003
+		x := (uint64(n)<<42 | uint64(n)<<28 | uint64(n)<<14 | uint64(n)) & 0x00030003_00030003
 		binary.BigEndian.PutUint64(out[c:c+8], x+mask)
 	}
 }
@@ -67,7 +67,7 @@ func enc64blk2(mask uint64, in, out []byte) {
 func enc32blk4(mask uint32, in, out []byte) {
 	for i, n := range in {
 		c := i * 4
-		x := (uint32(n)<<12 | uint32(n)) & 0xf000f
+		x := (uint32(n)<<12 | uint32(n)) & 0x000f000f
 		binary.BigEndian.PutUint32(out[c:c+4], x+mask)
 	}
 }

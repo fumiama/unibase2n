@@ -12,6 +12,11 @@ type uint128be struct {
 	b uint64
 }
 
+var (
+	u128minusone = uint128be{0xffffffff_ffffffff, 0xffffffff_ffffffff}
+	u128one      = uint128be{0, 1}
+)
+
 func readuint128be(b []byte) uint128be {
 	if len(b) < 16 {
 		b = append(b, make([]byte, 16-len(b))...)
@@ -29,12 +34,34 @@ func (num *uint128be) addeq(n uint128be) {
 	return
 }
 
+func (num *uint128be) subeq(n uint128be) {
+	var b uint64
+	num.b, b = bits.Sub64(num.b, n.b, 0)
+	num.a, _ = bits.Sub64(num.a, n.a, b)
+	return
+}
+
+func (num uint128be) sub(n uint128be) (r uint128be) {
+	var b uint64
+	r.b, b = bits.Sub64(num.b, n.b, 0)
+	r.a, _ = bits.Sub64(num.a, n.a, b)
+	return
+}
+
 // shreq only supports shifting 1 ~ 63 bits
 func (num *uint128be) shreq(c uint8) {
 	mask := uint64(1)<<c - 1
 	aout := (num.a & mask) << (64 - c)
 	num.a = num.a >> c
 	num.b = aout | (num.b >> c)
+}
+
+// shreq only supports shifting 1 ~ 63 bits
+func (num *uint128be) shleq(c uint8) {
+	mask := (uint64(1)<<c - 1) << (64 - c)
+	bout := (num.b & mask) >> (64 - c)
+	num.b = num.b << c
+	num.a = bout | (num.a << c)
 }
 
 func (num *uint128be) andeq(n uint128be) {
