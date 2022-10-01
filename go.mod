@@ -3,6 +3,7 @@ module github.com/fumiama/unibase2n
 go 1.18
 
 require (
+	github.com/fumiama/go-base16384 v1.6.1
 	github.com/stretchr/testify v1.8.0
 	golang.org/x/text v0.3.7
 )

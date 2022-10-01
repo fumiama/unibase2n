@@ -15,11 +15,11 @@ var (
 	// Base64 箭頭 Arrows
 	Base64, _ = NewBase(0x2190, 0x21d0, 6)
 	// Base64Gua 六十四卦 YiJing Hexagram Symbols
-	Base64Gua, _ = NewBase(0x3400, 0x262f, 6)
+	Base64Gua, _ = NewBase(0x4dc0, 0x262f, 6)
 	// Base32 方塊元素 Block Elements
 	Base32, _ = NewBase(0x2580, 0x259f, 5)
 	// Base16 漢文訓讀點 Kanbun Kundoku Den
 	Base16, _ = NewBase(0x3190, 0, 4)
-	// Base8 八卦 YiJing Hexagram Symbols
-	Base8, _ = NewBase(0x2630, 0x2689, 3)
+	// Base8Gua 八卦 YiJing Hexagram Symbols
+	Base8Gua, _ = NewBase(0x2630, 0x2689, 3)
 )
