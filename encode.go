@@ -36,38 +36,6 @@ func (bs Base) Encode(data []byte) (out []byte) {
 	return
 }
 
-// enc64blk2 for bit 2
-//    len(in)!=0, len(out)==len(in)*8
-//go:nosplit
-func enc64blk2(mask uint64, in, out []byte) {
-	for i, n := range in {
-		c := i * 8
-		x := (uint64(n)<<42 | uint64(n)<<28 | uint64(n)<<14 | uint64(n)) & 0x00030003_00030003
-		binary.BigEndian.PutUint64(out[c:c+8], x+mask)
-	}
-}
-
-// enc32blk4 for bit 4
-//    len(in)!=0, len(out)==len(in)*4
-//go:nosplit
-func enc32blk4(mask uint32, in, out []byte) {
-	for i, n := range in {
-		c := i * 4
-		x := (uint32(n)<<12 | uint32(n)) & 0x000f000f
-		binary.BigEndian.PutUint32(out[c:c+4], x+mask)
-	}
-}
-
-// enc16blk8 for bit 8
-//    len(in)!=0, len(out)==len(in)*2
-//go:nosplit
-func enc16blk8(mask uint16, in, out []byte) {
-	for i, n := range in {
-		c := i * 2
-		binary.BigEndian.PutUint16(out[c:c+2], uint16(n)+mask)
-	}
-}
-
 // enc128blk for bit 3 5 6 7 9 11 13 15
 //    len(in)>0, len(out)==len(in)/bit*16
 //go:nosplit
