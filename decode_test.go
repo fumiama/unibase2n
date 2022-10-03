@@ -78,9 +78,9 @@ func TestDec16blk8(t *testing.T) {
 	}
 	n, _ := Base{bit: 8}.EncodeLen(32)
 	out := make([]byte, n)
-	enc16blk8(0x2333, in[:], out)
+	enc16blk8(0x1100, in[:], out)
 	t.Log(out)
-	dec16blk8(0x2333, out[:], tmp[:])
+	dec16blk8(0x1100, out[:], tmp[:])
 	assert.Equal(t, in, tmp)
 }
 

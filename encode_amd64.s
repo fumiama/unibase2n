@@ -146,8 +146,9 @@ TEXT ·enc16blk8(SB), NOSPLIT, $0-56
     CLD
 lop:
     LODSB
+    ANDW $0xff, AX
     // add mask
-    LEAW 0(AX)(BX*1), AX
+    ADDW BX, AX
     RORW $8, AX
     STOSW
     LOOP lop
