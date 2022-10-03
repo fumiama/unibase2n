@@ -86,6 +86,12 @@ func (num uint128be) or(n uint128be) (r uint128be) {
 	return
 }
 
+func (num uint128be) bswap() (r uint128be) {
+	r.a = bits.ReverseBytes64(num.b)
+	r.b = bits.ReverseBytes64(num.a)
+	return
+}
+
 func (num *uint128be) write(b []byte) {
 	binary.BigEndian.PutUint64(b[:8], num.a)
 	binary.BigEndian.PutUint64(b[8:16], num.b)
