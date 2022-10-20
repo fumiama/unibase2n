@@ -11,6 +11,20 @@ func (bs Base) Encode(data []byte) (out []byte) {
 		return nil
 	}
 	out = make([]byte, outlen)
+	bs.encode(data, out, outlen, offset)
+	return
+}
+
+// EncodeTo data to base2n
+func (bs Base) EncodeTo(data, out []byte) {
+	outlen, offset := bs.EncodeLen(len(data))
+	if outlen <= 0 || offset < 0 {
+		return
+	}
+	bs.encode(data, out, outlen, offset)
+}
+
+func (bs Base) encode(data, out []byte, outlen, offset int) {
 	switch bs.bit {
 	case 3, 5, 7, 9, 11, 13, 15:
 		mask64 := uint64(bs.off) | uint64(bs.off)<<16 | uint64(bs.off)<<32 | uint64(bs.off)<<48
@@ -33,11 +47,12 @@ func (bs Base) Encode(data []byte) (out []byte) {
 	if offset > 0 {
 		binary.BigEndian.PutUint16(out[outlen-2:outlen], bs.til+uint16(offset))
 	}
-	return
 }
 
 // enc128blk for bit 3 5 6 7 9 11 13 15
-//    len(in)>0, len(out)==len(in)/bit*16
+//
+//	len(in)>0, len(out)==len(in)/bit*16
+//
 //go:nosplit
 func enc128blk(mask uint128be, bit uint8, in, out []byte) {
 	// 由于最后一次处理有读取越界, 因此作扩展
@@ -113,7 +128,9 @@ func enc128blk(mask uint128be, bit uint8, in, out []byte) {
 }
 
 // enc64blk for bit 6 10 12 14
-//    len(in)>0, len(out)==len(in)/bit*16
+//
+//	len(in)>0, len(out)==len(in)/bit*16
+//
 //go:nosplit
 func enc64blk(mask uint64, bit uint8, in, out []byte) {
 	// 由于最后一次处理有读取越界, 因此作扩展
