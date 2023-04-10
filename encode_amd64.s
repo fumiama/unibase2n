@@ -5,7 +5,7 @@
 
 // enc16blk1(mask uint16, in, out []byte)
 //    for bit 1 (actual enc128blk1)
-TEXT ·enc16blk1(SB), NOSPLIT, $0-56
+TEXT ·enc16blk1(SB), NOSPLIT, $8-56
     // create mask
     MOVQ ·mask+0(FP), BX
     ANDQ $0xffff, BX
@@ -23,6 +23,7 @@ TEXT ·enc16blk1(SB), NOSPLIT, $0-56
     MOVQ ·inlen+16(FP), CX
     // load dest addr
     MOVQ ·out+32(FP), DI
+    PUSHFQ
     // go forward
     CLD
 lop:
@@ -63,11 +64,12 @@ lop:
     BSWAPQ AX
     STOSQ
     LOOP lop
+    POPFQ
     RET
 
 // enc64blk2(mask uint64, in, out []byte)
 //    len(in)!=0, len(out)==len(in)*8
-TEXT ·enc64blk2(SB), NOSPLIT, $0-56
+TEXT ·enc64blk2(SB), NOSPLIT, $8-56
     // load mask
     MOVQ ·mask+0(FP), BX
     // load source addr
@@ -76,6 +78,7 @@ TEXT ·enc64blk2(SB), NOSPLIT, $0-56
     MOVQ ·inlen+16(FP), CX
     // load dest addr
     MOVQ ·out+32(FP), DI
+    PUSHFQ
     // go forward
     CLD
 lop:
@@ -101,11 +104,12 @@ lop:
     BSWAPQ AX
     STOSQ
     LOOP lop
+    POPFQ
     RET
 
 // enc32blk4(mask uint32, in, out []byte)
 //    len(in)!=0, len(out)==len(in)*4
-TEXT ·enc32blk4(SB), NOSPLIT, $0-56
+TEXT ·enc32blk4(SB), NOSPLIT, $8-56
     // load mask
     MOVQ ·mask+0(FP), BX
     // load source addr
@@ -114,6 +118,7 @@ TEXT ·enc32blk4(SB), NOSPLIT, $0-56
     MOVQ ·inlen+16(FP), CX
     // load dest addr
     MOVQ ·out+32(FP), DI
+    PUSHFQ
     // go forward
     CLD
 lop:
@@ -129,11 +134,12 @@ lop:
     BSWAPL AX
     STOSL
     LOOP lop
+    POPFQ
     RET
 
 // func enc16blk8(mask uint16, in, out []byte)
 //    len(in)!=0, len(out)==len(in)*2
-TEXT ·enc16blk8(SB), NOSPLIT, $0-56
+TEXT ·enc16blk8(SB), NOSPLIT, $8-56
     // load mask
     MOVQ ·mask+0(FP), BX
     // load source addr
@@ -142,6 +148,7 @@ TEXT ·enc16blk8(SB), NOSPLIT, $0-56
     MOVQ ·inlen+16(FP), CX
     // load dest addr
     MOVQ ·out+32(FP), DI
+    PUSHFQ
     // go forward
     CLD
 lop:
@@ -152,4 +159,5 @@ lop:
     RORW $8, AX
     STOSW
     LOOP lop
+    POPFQ
     RET

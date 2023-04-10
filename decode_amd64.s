@@ -5,13 +5,14 @@
 
 // dec128blk1(mask uint128be, in, out []byte)
 //    len(in)>0, len(in)%16==0, len(out)==len(in)/16
-TEXT ·dec128blk1(SB), NOSPLIT, $0-64
+TEXT ·dec128blk1(SB), NOSPLIT, $8-64
     MOVQ ·mask+0(FP), DX
     BSWAPQ DX
     MOVQ ·in+16(FP), SI
     MOVQ ·in+24(FP), CX
     SHRQ $4, CX
     MOVQ ·in+40(FP), DI
+    PUSHFQ
     // go forward
     CLD
 lop:
@@ -53,4 +54,5 @@ lop:
 
     STOSB
     LOOP lop
+    POPFQ
     RET
