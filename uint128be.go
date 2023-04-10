@@ -12,11 +12,6 @@ type uint128be struct {
 	b uint64
 }
 
-var (
-	u128minusone = uint128be{0xffffffff_ffffffff, 0xffffffff_ffffffff}
-	u128one      = uint128be{0, 1}
-)
-
 func readuint128be(b []byte) uint128be {
 	if len(b) < 16 {
 		b = append(b, make([]byte, 16-len(b))...)
@@ -31,15 +26,15 @@ func (num *uint128be) addeq(n uint128be) {
 	var c uint64
 	num.b, c = bits.Add64(num.b, n.b, 0)
 	num.a, _ = bits.Add64(num.a, n.a, c)
-	return
 }
 
+/*
 func (num *uint128be) subeq(n uint128be) {
 	var b uint64
 	num.b, b = bits.Sub64(num.b, n.b, 0)
 	num.a, _ = bits.Sub64(num.a, n.a, b)
 	return
-}
+}*/
 
 func (num uint128be) sub(n uint128be) (r uint128be) {
 	var b uint64
@@ -64,10 +59,11 @@ func (num *uint128be) shleq(c uint8) {
 	num.a = bout | (num.a << c)
 }
 
+/*
 func (num *uint128be) andeq(n uint128be) {
 	num.a &= n.a
 	num.b &= n.b
-}
+}*/
 
 func (num uint128be) and(n uint128be) (r uint128be) {
 	r.a = num.a & n.a
@@ -80,6 +76,7 @@ func (num *uint128be) oreq(n uint128be) {
 	num.b |= n.b
 }
 
+/*
 func (num uint128be) or(n uint128be) (r uint128be) {
 	r.a = num.a | n.a
 	r.b = num.b | n.b
@@ -90,12 +87,11 @@ func (num uint128be) bswap() (r uint128be) {
 	r.a = bits.ReverseBytes64(num.b)
 	r.b = bits.ReverseBytes64(num.a)
 	return
-}
+}*/
 
 func (num *uint128be) write(b []byte) {
 	binary.BigEndian.PutUint64(b[:8], num.a)
 	binary.BigEndian.PutUint64(b[8:16], num.b)
-	return
 }
 
 func (num uint128be) String() string {
