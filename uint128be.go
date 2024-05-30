@@ -7,6 +7,8 @@ import (
 	"strconv"
 )
 
+var u128one = uint128be{0, 1}
+
 type uint128be struct {
 	a uint64
 	b uint64
@@ -28,13 +30,11 @@ func (num *uint128be) addeq(n uint128be) {
 	num.a, _ = bits.Add64(num.a, n.a, c)
 }
 
-/*
 func (num *uint128be) subeq(n uint128be) {
 	var b uint64
 	num.b, b = bits.Sub64(num.b, n.b, 0)
 	num.a, _ = bits.Sub64(num.a, n.a, b)
-	return
-}*/
+}
 
 func (num uint128be) sub(n uint128be) (r uint128be) {
 	var b uint64
